@@ -69,6 +69,15 @@ class Rectangle(Figure):
         self.width = abs(point1_x - point2_x)
         self.height = abs(point1_y - point2_y)
 
+    @classmethod
+    def parse(cls, input_parts):
+        point1_type = parse_point_type(input_parts[1])
+        x1 = float(input_parts[2])
+        y1 = float(input_parts[3])
+        point2_type = parse_point_type(input_parts[4])
+        x2 = float(input_parts[5])
+        y2 = float(input_parts[6])
+        return cls(point1_type, x1, y1, point2_type, x2, y2)
     def perimeter(self):
         return (self.width + self.height) * 2
 
@@ -114,6 +123,14 @@ class Circle(Figure):
         self.center_y = center_y
         self.radius = radius
 
+    @classmethod
+    def parse(cls, input_parts):
+        point_type = parse_point_type(input_parts[1])
+        x = float(input_parts[2])
+        y = float(input_parts[3])
+        radius = float(input_parts[5])
+        return cls(point_type, x, y, radius)
+
     def perimeter(self):
         return 2 * math.pi * self.radius
 
@@ -136,27 +153,7 @@ def process_line(line):
     fig_type = figure_types[fig_type_key]
 
     try:
-        if fig_type == Square:
-            return fig_type.parse(input_parts)
-
-        elif fig_type == Rectangle:
-            point1_type = parse_point_type(input_parts[1])
-            x1 = float(input_parts[2])
-            y1 = float(input_parts[3])
-            point2_type = parse_point_type(input_parts[4])
-            x2 = float(input_parts[5])
-            y2 = float(input_parts[6])
-            return fig_type(point1_type, x1, y1, point2_type, x2, y2)
-
-        elif fig_type == Circle:
-            point_type = parse_point_type(input_parts[1])
-            x = float(input_parts[2])
-            y = float(input_parts[3])
-            radius = float(input_parts[5])
-            return fig_type(point_type, x, y, radius)
-        else:
-            raise ValueError("Unsupported figure.")
-
+        return fig_type.parse(input_parts)
     except IndexError:
         raise IndexError("Input is missing required parameters.")
     except ValueError:
