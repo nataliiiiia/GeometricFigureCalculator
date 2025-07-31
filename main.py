@@ -40,28 +40,7 @@ class Figure(ABC):
         return f"{self.__class__.__name__} Perimeter {self.perimeter()} Area {self.area()}"
 
 
-class Square(Figure):
-    allowed_points = {
-        PointType.BOTTOM_RIGHT,
-        PointType.TOP_LEFT,
-        PointType.BOTTOM_LEFT,
-        PointType.TOP_RIGHT
-    }
 
-    def __init__(self, point_x, point_y, side, point_type):
-        if side <= 0:
-            raise ValueError("The side must be greater than 0.")
-        self.validate_point(point_type)
-        self.point_x = point_x
-        self.point_y = point_y
-        self.side = side
-        self.point_type = point_type
-
-    def perimeter(self):
-        return 4 * self.side
-
-    def area(self):
-        return self.side ** 2
 
 
 class Rectangle(Figure):
@@ -91,6 +70,25 @@ class Rectangle(Figure):
 
     def area(self):
         return self.width * self.height
+
+
+class Square(Rectangle):
+    allowed_points = {
+        PointType.BOTTOM_RIGHT,
+        PointType.TOP_LEFT,
+        PointType.BOTTOM_LEFT,
+        PointType.TOP_RIGHT
+    }
+
+    def __init__(self, point_x, point_y, side, point_type):
+        if side <= 0:
+            raise ValueError("The side must be greater than 0.")
+        self.validate_point(point_type)
+        self.point_x = point_x
+        self.point_y = point_y
+        self.side = side
+        self.point_type = point_type
+        super().__init__(point_type, point_x, point_y, PointType.BOTTOM_RIGHT, point_x+side, point_y+side)
 
 
 class Circle(Figure):
