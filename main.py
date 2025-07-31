@@ -21,6 +21,10 @@ def parse_point_type(s):
 class Figure(ABC):
     allowed_points = set()
 
+    @classmethod
+    def parse(cls, input_parts):
+        pass
+
     @abstractmethod
     def perimeter(self):
         pass
@@ -90,6 +94,14 @@ class Square(Rectangle):
         self.point_type = point_type
         super().__init__(point_type, point_x, point_y, PointType.BOTTOM_RIGHT, point_x+side, point_y+side)
 
+    @classmethod
+    def parse(cls, input_parts):
+        point_type = parse_point_type(input_parts[1])
+        x = float(input_parts[2])
+        y = float(input_parts[3])
+        side = float(input_parts[5])
+        return cls(x, y, side, point_type)
+
 
 class Circle(Figure):
     allowed_points = {PointType.CENTER}
@@ -125,11 +137,7 @@ def process_line(line):
 
     try:
         if fig_type == Square:
-            point_type = parse_point_type(input_parts[1])
-            x = float(input_parts[2])
-            y = float(input_parts[3])
-            side = float(input_parts[5])
-            return fig_type(x, y, side, point_type)
+            return fig_type.parse(input_parts)
 
         elif fig_type == Rectangle:
             point1_type = parse_point_type(input_parts[1])
